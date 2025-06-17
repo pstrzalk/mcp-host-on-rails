@@ -1,0 +1,12 @@
+<%
+  if message.role == 'user'
+    background = "bg-green-200"
+    position = "float-right"
+  else
+    background = "bg-red-200"
+    position = "float-left"
+  end
+%>
+<div class="message <%= message.role %> w-full">
+  <div class="<%= background %> <%= position %> p-4 w-4/5"><%= message.content %></div>
+</div>
