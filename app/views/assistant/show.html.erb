@@ -1,4 +1,4 @@
-<div id="chat" class="mt-8 w-full">
+<div id="chat" class="mt-8 w-full relative">
   <div id="messages" class="text-2xl h-[32rem] overflow-y-scroll bg-gray-100 border-black border-2 p-4 flex flex-col gap-4">
     <% @messages.each do |message| %>
       <%= render partial: "/assistant/message", locals: { message: } %>
@@ -6,13 +6,10 @@
   </div>
 
   <div id="chat_input" class="mt-8 w-full">
-    <%= render partial: "chat_form", locals: { messages: [] } %>
+    <%= render partial: "chat_form" %>
   </div>
 
-  <div class="flex justify-between items-center mb-4">
-    <%= button_to "Clear Messages", chat_assistant_path, method: :delete,
-        class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
-        confirm: "Are you sure you want to clear all messages?" %>
-  </div>
-
+  <%= button_to "Clear Messages", chat_assistant_path, method: :delete,
+              class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded absolute",
+              confirm: "Are you sure you want to clear all messages?" %>
 </div>

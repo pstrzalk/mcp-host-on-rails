@@ -1,16 +1,17 @@
 require "mcp_client"
 
 class AssistantController < ApplicationController
-  before_action :initialize_seesion_messages
+  before_action :initialize_session_messages
 
   def show
     @messages = session[:messages].map do |message|
       Message.new(**message)
     end
   end
-
   def reset
     session[:messages] = []
+
+    redirect_to action: :show
   end
 
   def chat
@@ -65,8 +66,8 @@ class AssistantController < ApplicationController
         function_name, function_arguments
       )
 
-      tool_call_message << { "role" => "assistant", "tool_calls" => [ tool_call ] }
-      tool_content_message  << {
+      tool_call_message = { "role" => "assistant", "tool_calls" => [ tool_call ] }
+      tool_content_message = {
         "role" => "tool", "tool_call_id" => tool_call["id"], "name" => function_name, "content" => tool_call_result.to_json
       }
       openai_messages << tool_call_message
@@ -123,7 +124,7 @@ class AssistantController < ApplicationController
     @openai_client ||= OpenAI::Client.new
   end
 
-  def initialize_seesion_messages
+  def initialize_session_messages
     session[:messages] ||= []
   end
 end
