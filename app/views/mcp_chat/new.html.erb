@@ -1,0 +1,13 @@
+<div class="width: 100vw; height: 90vh; position: relative; margin-top: 50px; padding-top: 30px; font-size: 1.25em;">
+
+  <div style="width: 70vw; margin-top: 20px;">
+    <%= form_with url: '/mcp_chat/chat', method: :post do |form| %>
+      <div>
+        <%= form.text_area :prompt, rows: 10, cols: 120, placeholder: "How can I help you?", style: 'width: 100%; padding: 10px;' %>
+      </div>
+      <div>
+        <%= form.submit "Send", style: "background-color: #4285f4; color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer;" %> &nbsp; Chat id: <%= @mcp_chat_id %>
+      </div>
+    <% end %>
+  </div>
+</div>

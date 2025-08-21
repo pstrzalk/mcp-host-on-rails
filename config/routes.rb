@@ -10,7 +10,12 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  post "chat_assistant" => "assistant#chat"
-  delete "chat_assistant" => "assistant#reset"
-  root "assistant#show"
+  get  "/mcp_chat/toolbox", to: "mcp_chat#toolbox"
+  get  "/mcp_chat/new", to: "mcp_chat#new"
+  post "/mcp_chat/chat", to: "mcp_chat#chat"
+  post "/mcp_chat/confirm_tool_yes", to: "mcp_chat#confirm_tool_yes"
+  post "/mcp_chat/confirm_tool_no", to: "mcp_chat#confirm_tool_no"
+  get  "/mcp_chat/", to: "mcp_chat#show"
+
+  root "mcp_chat#show"
 end

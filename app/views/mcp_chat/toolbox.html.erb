@@ -1,0 +1,18 @@
+<h1>MCP Toolbox</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Tool Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tools.each do |tool| %>
+      <tr>
+        <td><%= tool.name %></td>
+        <td><%= simple_format tool.description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
