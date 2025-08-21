@@ -4,23 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MCP Chat - Available Tools</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'claude-orange': '#FF6B35',
-                        'claude-blue': '#0066CC',
-                        'chat-bg': '#F8FAFC',
-                        'message-bg': '#FFFFFF',
-                        'assistant-bg': '#F1F5F9',
-                        'user-bg': '#EBF4FF'
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Custom colors for design - these would be in your Tailwind config in production */
+        .bg-claude-orange { background-color: #FF6B35; }
+        .bg-claude-blue { background-color: #0066CC; }
+        .bg-chat-bg { background-color: #F8FAFC; }
+        .bg-assistant-bg { background-color: #F1F5F9; }
+        .bg-user-bg { background-color: #EBF4FF; }
+        .text-claude-blue { color: #0066CC; }
+        .text-claude-orange { color: #FF6B35; }
+        .hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+        .gradient-claude { background: linear-gradient(to bottom right, #FF6B35, #0066CC); }
+    </style>
 </head>
 <body class="bg-chat-bg min-h-screen font-sans">
     <!-- Main Container -->
@@ -30,7 +26,7 @@
         <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-gradient-to-br from-claude-orange to-claude-blue rounded-lg flex items-center justify-center">
+                    <div class="w-8 h-8 gradient-claude rounded-lg flex items-center justify-center">
                         <span class="text-white font-bold text-sm">M</span>
                     </div>
                     <h1 class="text-xl font-semibold text-gray-900">Available Tools</h1>
