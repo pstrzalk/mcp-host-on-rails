@@ -17,5 +17,7 @@ Rails.application.routes.draw do
   post "/mcp_chat/confirm_tool_no", to: "mcp_chat#confirm_tool_no"
   get  "/mcp_chat/", to: "mcp_chat#show"
 
+  resources :mcp_servers, only: [:index, :create, :destroy]
+
   root "mcp_chat#show"
 end

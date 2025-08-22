@@ -10,12 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_21_211227) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_22_223118) do
   create_table "mcp_chats", force: :cascade do |t|
     t.string "tool_confirmation_state"
     t.string "mcp_chat_id"
     t.json "messages", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "mcp_servers", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "url", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_mcp_servers_on_created_at"
+    t.index ["name"], name: "index_mcp_servers_on_name", unique: true
   end
 end

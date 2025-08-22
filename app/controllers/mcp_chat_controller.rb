@@ -175,17 +175,33 @@ class McpChatController < ApplicationController
   end
 
   def mcp_client
-    @mcp_client ||= MCPClient.create_client(
-      mcp_server_configs: [
-        MCPClient.streamable_http_config(
-          base_url: "http://localhost:3000/mcp",
+    @mcp_client ||= begin
+      servers = McpServer.ordered
+      
+      # Fallback to environment variable if no servers configured
+      if servers.empty?
+        fallback_url = ENV.fetch("MCP_SERVER_URL", "http://localhost:3000/mcp")
+        configs = [MCPClient.streamable_http_config(
+          base_url: fallback_url,
           read_timeout: 60,     # Timeout in seconds for HTTP requests
           retries: 3,           # Number of retry attempts on transient errors
           retry_backoff: 2,     # Base delay in seconds for exponential backoff
           logger: logger        # Optional logger for debugging requests
-        )
-      ]
-    )
+        )]
+      else
+        configs = servers.map do |server|
+          MCPClient.streamable_http_config(
+            base_url: server.url,
+            read_timeout: 60,     # Timeout in seconds for HTTP requests
+            retries: 3,           # Number of retry attempts on transient errors
+            retry_backoff: 2,     # Base delay in seconds for exponential backoff
+            logger: logger        # Optional logger for debugging requests
+          )
+        end
+      end
+      
+      MCPClient.create_client(mcp_server_configs: configs)
+    end
   end
 
   def tools

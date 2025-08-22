@@ -85,16 +85,19 @@ This is a Rails 8 application that implements an MCP (Model Context Protocol) ch
 
 ### Configuration
 
-- OpenAI API key required via `OPENAI_API_KEY` environment variable
-- MCP server expected at `http://localhost:3000/mcp`
-- SQLite database for development/test
-- Tailwind CSS with custom builds
+- **OpenAI API key**: Required via `OPENAI_API_KEY` environment variable
+- **MCP servers**: Configured via web interface at `/mcp_servers` (database-backed)
+  - Fallback: `MCP_SERVER_URL` environment variable when no servers configured (defaults to `http://localhost:3000/mcp`)
+  - All servers must use HTTP/HTTPS Streamable transport
+- **Database**: SQLite for development/test
+- **Styling**: Tailwind CSS with custom builds
 
 ### Routes Structure
 
 - `/` - Main chat interface
 - `/mcp_chat/new` - Initialize new chat session
 - `/mcp_chat/toolbox` - View available MCP tools
+- `/mcp_servers` - Manage MCP server configurations (add/remove servers)
 - Tool confirmation endpoints for approve/decline workflow
 
 ## ruby-mcp-client Gem Reference
