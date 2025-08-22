@@ -239,7 +239,7 @@
         <%= form.text_area :prompt, rows: 4, placeholder: "Type your message...", class: "w-full px-6 py-5 pr-32 border border-gray-300 rounded-xl resize-none focus:ring-2 focus:ring-claude-blue focus:border-transparent outline-none text-lg leading-relaxed", data: { shortcut_target: "textarea" } %>
 
         <div class="w-full flex justify-between mt-3">
-          <p class="text-sm text-gray-500">Chat ID: <%= @mcp_chat.mcp_chat_id %></p>
+          <p class="text-sm text-gray-500 py-3">Chat ID: <%= @mcp_chat.mcp_chat_id %></p>
           <%= form.submit "Send", class: "px-6 py-3 bg-claude-blue text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium", data: { shortcut_target: "submitButton" } %>
         </div>
       <% end %>
