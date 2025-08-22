@@ -8,12 +8,20 @@ class McpChatController < ApplicationController
   end
 
   def new
+    # Always create a new session/chat when user explicitly visits /new
     session["mcp_chat_id"] = SecureRandom.uuid
     @mcp_chat_id = session["mcp_chat_id"]
+    # Clear any existing chat instance variable to force a fresh start
+    @mcp_chat = nil
   end
 
   def show
-    mcp_chat or redirect_to "/mcp_chat/new"
+    # Initialize session if it doesn't exist, but don't redirect unless user explicitly wants new chat
+    unless session["mcp_chat_id"]
+      session["mcp_chat_id"] = SecureRandom.uuid
+    end
+
+    mcp_chat # This will create the chat if it doesn't exist
   end
 
   def chat
@@ -81,13 +89,13 @@ class McpChatController < ApplicationController
       messages: mcp_chat.raw_messages,
       temperature: 0.7
     }
-    
+
     # Only include tools if we have any configured
     if tools.any?
       chat_params[:tools] = tools
       chat_params[:tool_choice] = "auto"
     end
-    
+
     response = openai_client.chat(parameters: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
@@ -136,7 +144,7 @@ class McpChatController < ApplicationController
   def execute_single_tool(tool_call_definition)
     # Safety check - shouldn't happen if no servers configured
     return unless mcp_client
-    
+
     function_name = tool_call_definition.dig("function", "name")
     function_arguments = JSON.parse(tool_call_definition.dig("function", "arguments"))
 
@@ -157,13 +165,13 @@ class McpChatController < ApplicationController
       messages: mcp_chat.raw_messages,
       temperature: 0.7
     }
-    
+
     # Only include tools if we have any configured
     if tools.any?
       chat_params[:tools] = tools
       chat_params[:tool_choice] = "auto"
     end
-    
+
     response = openai_client.chat(parameters: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
@@ -188,10 +196,10 @@ class McpChatController < ApplicationController
   def mcp_client
     @mcp_client ||= begin
       servers = McpServer.ordered
-      
+
       # If no servers configured, return nil - chat will work without tools
       return nil if servers.empty?
-      
+
       configs = servers.map do |server|
         MCPClient.streamable_http_config(
           base_url: server.url,
@@ -201,7 +209,7 @@ class McpChatController < ApplicationController
           logger: logger        # Optional logger for debugging requests
         )
       end
-      
+
       MCPClient.create_client(mcp_server_configs: configs)
     end
   end
