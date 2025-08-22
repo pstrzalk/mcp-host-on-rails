@@ -38,9 +38,10 @@
     </div>
 
     <!-- Tools Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <% if @tools.any? %>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      <% @tools.each_with_index do |tool, index| %>
+        <% @tools.each_with_index do |tool, index| %>
         <%
           # Infer category and color from tool name
           tool_name = tool.name.to_s.downcase
@@ -130,9 +131,27 @@
             </div>
           </div>
         </div>
-      <% end %>
+        <% end %>
 
-    </div>
+      </div>
+    <% else %>
+      <!-- No tools available -->
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div class="px-6 py-8 text-center">
+          <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+          </svg>
+          <p class="text-base text-gray-600 mb-2">No tools available</p>
+          <p class="text-sm text-gray-500 mb-4">No MCP servers are configured. The chat will work as a regular AI assistant without external tools.</p>
+          <%= link_to mcp_servers_path, class: "inline-flex items-center px-4 py-2 bg-claude-blue text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Configure MCP Servers
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <!-- Footer Info -->
     <div class="mt-8 bg-gray-50 rounded-lg p-4 border border-gray-200">
@@ -140,7 +159,7 @@
         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <span>All tools are executed with your explicit permission. Click "Back to Chat" to start using these tools in conversation.</span>
+        <span><%= @tools.any? ? "All tools are executed with your explicit permission. Click \"Back to Chat\" to start using these tools in conversation." : "Configure MCP servers to enable external tools and capabilities for enhanced AI assistance." %></span>
       </div>
     </div>
 

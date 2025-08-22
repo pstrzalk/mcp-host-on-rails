@@ -4,7 +4,7 @@ class McpChatController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def toolbox
-    @tools ||= mcp_client.list_tools
+    @tools ||= mcp_client&.list_tools || []
   end
 
   def new
@@ -76,15 +76,19 @@ class McpChatController < ApplicationController
   private
 
   def get_llm_response_and_handle_tools
-    response = openai_client.chat(
-      parameters: {
-        model: "gpt-4.1-mini",
-        messages: mcp_chat.raw_messages,
-        temperature: 0.7,
-        tools: tools,
-        tool_choice: "auto"
-      }
-    )
+    chat_params = {
+      model: "gpt-4.1-mini",
+      messages: mcp_chat.raw_messages,
+      temperature: 0.7
+    }
+    
+    # Only include tools if we have any configured
+    if tools.any?
+      chat_params[:tools] = tools
+      chat_params[:tool_choice] = "auto"
+    end
+    
+    response = openai_client.chat(parameters: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
     tool_call_definitions = assistant_message["tool_calls"] || []
@@ -130,6 +134,9 @@ class McpChatController < ApplicationController
   end
 
   def execute_single_tool(tool_call_definition)
+    # Safety check - shouldn't happen if no servers configured
+    return unless mcp_client
+    
     function_name = tool_call_definition.dig("function", "name")
     function_arguments = JSON.parse(tool_call_definition.dig("function", "arguments"))
 
@@ -145,15 +152,19 @@ class McpChatController < ApplicationController
   end
 
   def continue_llm_conversation
-    response = openai_client.chat(
-      parameters: {
-        model: "gpt-4.1-mini",
-        messages: mcp_chat.raw_messages,
-        tools: tools,
-        tool_choice: "auto",
-        temperature: 0.7
-      }
-    )
+    chat_params = {
+      model: "gpt-4.1-mini",
+      messages: mcp_chat.raw_messages,
+      temperature: 0.7
+    }
+    
+    # Only include tools if we have any configured
+    if tools.any?
+      chat_params[:tools] = tools
+      chat_params[:tool_choice] = "auto"
+    end
+    
+    response = openai_client.chat(parameters: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
     tool_call_definitions = assistant_message["tool_calls"] || []
@@ -178,26 +189,17 @@ class McpChatController < ApplicationController
     @mcp_client ||= begin
       servers = McpServer.ordered
       
-      # Fallback to environment variable if no servers configured
-      if servers.empty?
-        fallback_url = ENV.fetch("MCP_SERVER_URL", "http://localhost:3000/mcp")
-        configs = [MCPClient.streamable_http_config(
-          base_url: fallback_url,
+      # If no servers configured, return nil - chat will work without tools
+      return nil if servers.empty?
+      
+      configs = servers.map do |server|
+        MCPClient.streamable_http_config(
+          base_url: server.url,
           read_timeout: 60,     # Timeout in seconds for HTTP requests
           retries: 3,           # Number of retry attempts on transient errors
           retry_backoff: 2,     # Base delay in seconds for exponential backoff
           logger: logger        # Optional logger for debugging requests
-        )]
-      else
-        configs = servers.map do |server|
-          MCPClient.streamable_http_config(
-            base_url: server.url,
-            read_timeout: 60,     # Timeout in seconds for HTTP requests
-            retries: 3,           # Number of retry attempts on transient errors
-            retry_backoff: 2,     # Base delay in seconds for exponential backoff
-            logger: logger        # Optional logger for debugging requests
-          )
-        end
+        )
       end
       
       MCPClient.create_client(mcp_server_configs: configs)
@@ -205,7 +207,7 @@ class McpChatController < ApplicationController
   end
 
   def tools
-    @tools ||= mcp_client.to_openai_tools
+    @tools ||= mcp_client&.to_openai_tools || []
   end
 
   def openai_client

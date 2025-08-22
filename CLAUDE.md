@@ -87,7 +87,7 @@ This is a Rails 8 application that implements an MCP (Model Context Protocol) ch
 
 - **OpenAI API key**: Required via `OPENAI_API_KEY` environment variable
 - **MCP servers**: Configured via web interface at `/mcp_servers` (database-backed)
-  - Fallback: `MCP_SERVER_URL` environment variable when no servers configured (defaults to `http://localhost:3000/mcp`)
+  - When no servers configured: Chat works as regular AI assistant without tools
   - All servers must use HTTP/HTTPS Streamable transport
 - **Database**: SQLite for development/test
 - **Styling**: Tailwind CSS with custom builds
