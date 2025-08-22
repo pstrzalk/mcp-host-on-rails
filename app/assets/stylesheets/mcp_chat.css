@@ -1,0 +1,119 @@
+/* MCP Chat Custom Styles */
+
+/* Custom background colors for design */
+.bg-claude-orange { 
+  background-color: #FF6B35; 
+}
+
+.bg-claude-blue { 
+  background-color: #0066CC; 
+}
+
+.bg-chat-bg { 
+  background-color: #F8FAFC; 
+}
+
+.bg-assistant-bg { 
+  background-color: #F1F5F9; 
+}
+
+.bg-user-bg { 
+  background-color: #EBF4FF; 
+}
+
+.bg-tool-bg { 
+  background-color: #FEF3C7; 
+}
+
+.bg-confirm-bg { 
+  background-color: #FFF7ED; 
+}
+
+/* Custom text colors */
+.text-claude-blue { 
+  color: #0066CC; 
+}
+
+.text-claude-orange { 
+  color: #FF6B35; 
+}
+
+/* Custom border colors */
+.border-tool-border { 
+  border-color: #F59E0B; 
+}
+
+.border-confirm-border { 
+  border-color: #FB923C; 
+}
+
+.border-claude-blue { 
+  border-color: #0066CC; 
+}
+
+/* Custom gradient */
+.gradient-claude { 
+  background: linear-gradient(to bottom right, #FF6B35, #0066CC); 
+}
+
+/* Custom hover states */
+.hover\:bg-blue-700:hover { 
+  background-color: #1d4ed8; 
+}
+
+.hover\:bg-green-700:hover { 
+  background-color: #15803d; 
+}
+
+.hover\:bg-red-700:hover { 
+  background-color: #b91c1c; 
+}
+
+.hover\:bg-blue-50:hover { 
+  background-color: #eff6ff; 
+}
+
+.hover\:text-claude-blue:hover { 
+  color: #0066CC; 
+}
+
+.hover\:border-claude-blue:hover { 
+  border-color: #0066CC; 
+}
+
+.hover\:text-green-700:hover { 
+  color: #15803d; 
+}
+
+.hover\:text-orange-700:hover { 
+  color: #c2410c; 
+}
+
+/* Tool icon specific colors */
+.text-tool-icon { 
+  color: #059669; 
+}
+
+/* Chat-specific utility classes */
+.chat-container {
+  height: 100vh;
+}
+
+.messages-container {
+  height: calc(100vh - 140px); /* Adjust based on header + input heights */
+}
+
+.message-bubble {
+  max-width: 75%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 90%;
+  }
+  
+  .messages-container {
+    height: calc(100vh - 160px);
+  }
+}

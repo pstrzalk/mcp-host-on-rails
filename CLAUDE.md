@@ -228,3 +228,4 @@ The app uses **Streamable HTTP** transport configured in `app/controllers/mcp_ch
 2. **OpenAI Integration**: `mcp_client.to_openai_tools` for LLM tool descriptions  
 3. **Tool Execution**: `mcp_client.call_tool(name, args)` after user confirmation
 4. **Error Handling**: Built-in retry logic with exponential backoff
+- rails server runs at 3030 port

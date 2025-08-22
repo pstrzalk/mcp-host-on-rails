@@ -1,18 +1,149 @@
-<h1>MCP Toolbox</h1>
+<!-- Main Container -->
+<div class="max-w-6xl mx-auto h-screen flex flex-col bg-chat-bg">
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Tool Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tools.each do |tool| %>
-      <tr>
-        <td><%= tool.name %></td>
-        <td><%= simple_format tool.description %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 gradient-claude rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-sm">M</span>
+        </div>
+        <h1 class="text-xl font-semibold text-gray-900">Available Tools</h1>
+        <span class="text-sm text-gray-500">•</span>
+        <span class="text-sm text-gray-500"><%= @tools.size %> tools available</span>
+      </div>
+      <%= link_to '/', class: "px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors" do %>
+        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        Back to Chat
+      <% end %>
+    </div>
+  </header>
+
+  <!-- Tools Container -->
+  <div class="flex-1 overflow-y-auto px-6 py-6">
+
+    <!-- Page Description -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-6">
+      <div class="flex items-start space-x-2">
+        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div>
+          <p class="text-sm text-blue-800 font-medium">Tools Overview</p>
+          <p class="text-sm text-blue-700 mt-1">These are the external tools available through the Model Context Protocol (MCP). Each tool requires your explicit permission before execution.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tools Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <% @tools.each_with_index do |tool, index| %>
+        <%
+          # Infer category and color from tool name
+          tool_name = tool.name.to_s.downcase
+          category_info = case tool_name
+          when /create|write|post|blog|content/
+            { name: "Content Creation", color: "green" }
+          when /read|get|fetch|file|document/
+            { name: "File System", color: "purple" }
+          when /analyze|data|report|chart/
+            { name: "Data Analysis", color: "blue" }
+          when /send|email|notify|message/
+            { name: "Communication", color: "red" }
+          when /web|http|scrape|url/
+            { name: "Web Scraping", color: "orange" }
+          when /database|sql|query|db/
+            { name: "Database", color: "indigo" }
+          when /search|find|lookup/
+            { name: "Search", color: "yellow" }
+          else
+            { name: "Utility", color: "gray" }
+          end
+        %>
+
+        <!-- Tool Card -->
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <div class="p-6">
+            <!-- Tool Header -->
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h3 class="font-semibold text-gray-900 mb-2"><%= tool.name %></h3>
+                <span class="text-xs text-<%= category_info[:color] %>-600 bg-<%= category_info[:color] %>-100 px-2 py-1 rounded-full"><%= category_info[:name] %></span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="text-gray-600 text-sm mb-4">
+              <%= simple_format tool.description %>
+            </div>
+
+            <!-- Input Schema / Parameters -->
+            <div class="border border-gray-200 rounded-lg p-3 bg-gray-50">
+              <h4 class="text-xs font-semibold text-gray-700 mb-2">Tool Information:</h4>
+
+              <% if tool.respond_to?(:input_schema) && tool.input_schema.present? %>
+                <!-- If we have input schema, show it -->
+                <% begin %>
+                  <% schema = tool.input_schema.is_a?(String) ? JSON.parse(tool.input_schema) : tool.input_schema %>
+                  <% if schema.is_a?(Hash) && schema["properties"] %>
+                    <div class="space-y-2 mb-3">
+                      <p class="text-xs text-gray-600 mb-2">Parameters:</p>
+                      <% schema["properties"].each do |param_name, param_info| %>
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-medium text-gray-900"><%= param_name %></span>
+                          <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded border">
+                            <%= param_info["type"] || "string" %>
+                          </span>
+                        </div>
+                      <% end %>
+                    </div>
+
+                    <details class="group">
+                      <summary class="text-xs text-gray-600 cursor-pointer hover:text-gray-800 flex items-center">
+                        <svg class="w-3 h-3 mr-1 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                        View full schema
+                      </summary>
+                      <div class="mt-2 bg-white rounded p-2 border">
+                        <pre class="text-xs text-gray-600 overflow-x-auto"><%= JSON.pretty_generate(schema) %></pre>
+                      </div>
+                    </details>
+                  <% else %>
+                    <p class="text-xs text-gray-600">Schema format not recognized</p>
+                  <% end %>
+                <% rescue JSON::ParserError %>
+                  <p class="text-xs text-gray-600">Schema parsing error</p>
+                <% end %>
+              <% else %>
+                <!-- Fallback if no schema available -->
+                <div class="space-y-2">
+                  <p class="text-xs text-gray-600">Tool Name: <span class="font-medium"><%= tool.name %></span></p>
+                  <% if tool.respond_to?(:method_info) && tool.method_info.present? %>
+                    <p class="text-xs text-gray-600">Additional Info: <%= tool.method_info %></p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <!-- Footer Info -->
+    <div class="mt-8 bg-gray-50 rounded-lg p-4 border border-gray-200">
+      <div class="flex items-center space-x-2 text-sm text-gray-600">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span>All tools are executed with your explicit permission. Click "Back to Chat" to start using these tools in conversation.</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
