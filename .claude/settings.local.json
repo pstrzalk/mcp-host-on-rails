@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(bundle exec rails runner:*)",
-      "Bash(bundle exec rails:*)"
+      "Bash(bundle exec rails:*)",
+      "Bash(git add:*)",
+      "mcp__playwright__playwright_screenshot"
     ],
     "deny": [],
     "ask": []

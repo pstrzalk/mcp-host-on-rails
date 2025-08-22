@@ -125,13 +125,13 @@
 
   <!-- Input Area -->
   <div class="bg-white border-t border-gray-200 px-6 py-4">
-    <%= form_with url: '/mcp_chat/chat', method: :post, local: true, class: "flex space-x-4" do |form| %>
-      <div class="flex-1">
-        <%= form.text_area :prompt, rows: 3, placeholder: "How can I help you today?", class: "w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-claude-blue focus:border-transparent outline-none", id: "chat-prompt-input" %>
+    <%= form_with url: '/mcp_chat/chat', method: :post, local: true, class: "relative" do |form| %>
+      <%= form.text_area :prompt, rows: 3, placeholder: "How can I help you today?", class: "w-full px-4 py-3 pr-20 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-claude-blue focus:border-transparent outline-none", id: "chat-prompt-input" %>
+      <div class="w-full flex justify-between">
+        <p class="text-xs text-gray-500 mt-2">Starting new conversation...</p>
+        <%= form.submit "Send", class: "px-3 py-2 bg-claude-blue text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium" %>
       </div>
-      <%= form.submit "Send", class: "px-6 py-3 bg-claude-blue text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 self-end" %>
     <% end %>
-    <p class="text-xs text-gray-500 mt-2">Starting new conversation...</p>
   </div>
 
 </div>
