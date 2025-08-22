@@ -11,6 +11,7 @@ class McpChat < ApplicationRecord
   def ui_messages
     raw_messages.map do |message|
       next if message["role"] == "assistant" && message["content"].blank?
+      next if message["role"] == "system"
 
       if message["role"] == "tool"
         message["content"] = "Calling tool <br><pre>#{message["function_name"]}#{(message["function_arguments"] || []).map { |k, v| "\n  #{k} => #{v}" }.join("") }</pre>"
