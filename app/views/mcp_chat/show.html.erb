@@ -1,5 +1,5 @@
 <!-- Main Container -->
-<div class="max-w-4xl mx-auto h-screen flex flex-col bg-chat-bg">
+<div class="w-full max-w-none mx-auto h-screen flex flex-col bg-chat-bg px-4 sm:px-6 lg:px-8">
 
   <!-- Header -->
   <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
@@ -43,7 +43,7 @@
       <% when "user" %>
         <!-- User Message -->
         <div class="flex items-start space-x-3 justify-end">
-          <div class="flex-1 max-w-3xl">
+          <div class="flex-1">
             <div class="bg-user-bg rounded-lg px-4 py-3 border border-blue-200">
               <p class="text-sm text-blue-700 font-medium mb-1">You</p>
               <div class="text-gray-900"><%= simple_format message["content"] %></div>
