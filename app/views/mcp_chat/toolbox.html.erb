@@ -2,18 +2,18 @@
 <div class="w-full h-screen flex flex-col bg-chat-bg">
 
   <!-- Header -->
-  <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+  <header class="bg-white shadow-sm border-b border-gray-200 px-9 py-6">
     <div class="flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 gradient-claude rounded-lg flex items-center justify-center">
-          <span class="text-white font-bold text-sm">M</span>
+      <div class="flex items-center space-x-5">
+        <div class="w-12 h-12 gradient-claude rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-lg">M</span>
         </div>
-        <h1 class="text-xl font-semibold text-gray-900">Available Tools</h1>
-        <span class="text-sm text-gray-500">•</span>
-        <span class="text-sm text-gray-500"><%= @tools.size %> tools available</span>
+        <h1 class="text-3xl font-semibold text-gray-900">Available Tools</h1>
+        <span class="text-base text-gray-500">•</span>
+        <span class="text-base text-gray-500"><%= @tools.size %> tools available</span>
       </div>
-      <%= link_to '/', class: "px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors" do %>
-        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <%= link_to '/', class: "px-6 py-3 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors" do %>
+        <svg class="w-6 h-6 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
         </svg>
         Back to Chat

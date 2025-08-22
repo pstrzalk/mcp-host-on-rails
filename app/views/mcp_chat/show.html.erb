@@ -2,23 +2,23 @@
 <div class="w-full h-screen flex flex-col bg-chat-bg">
 
   <!-- Header -->
-  <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+  <header class="bg-white shadow-sm border-b border-gray-200 px-9 py-6">
     <div class="flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 gradient-claude rounded-lg flex items-center justify-center">
-          <span class="text-white font-bold text-sm">M</span>
+      <div class="flex items-center space-x-5">
+        <div class="w-12 h-12 gradient-claude rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-lg">M</span>
         </div>
-        <h1 class="text-xl font-semibold text-gray-900">MCP Chat</h1>
+        <h1 class="text-3xl font-semibold text-gray-900">MCP Chat</h1>
       </div>
-      <div class="flex space-x-2">
-        <%= link_to '/mcp_chat/toolbox', class: "px-4 py-2 text-sm font-medium text-claude-blue hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors" do %>
-          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex space-x-3">
+        <%= link_to '/mcp_chat/toolbox', class: "px-6 py-3 text-base font-medium text-claude-blue hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors" do %>
+          <svg class="w-6 h-6 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
           </svg>
           View Tools
         <% end %>
-        <%= link_to '/mcp_chat/new', class: "px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors" do %>
-          <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <%= link_to '/mcp_chat/new', class: "px-6 py-3 text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors" do %>
+          <svg class="w-6 h-6 inline mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
           New Chat
@@ -28,50 +28,50 @@
   </header>
 
   <!-- Chat Messages Container -->
-  <div class="flex-1 overflow-y-auto px-6 py-6 space-y-6" data-controller="chat" data-action="DOMContentLoaded@document->chat#scrollToBottom">
+  <div class="flex-1 overflow-y-auto px-9 py-9 space-y-9" data-controller="chat" data-action="DOMContentLoaded@document->chat#scrollToBottom">
 
     <% @mcp_chat.ui_messages.each do |message| %>
       <% case message["role"] %>
       <% when "system" %>
         <!-- System Message -->
-        <div class="flex items-start space-x-3">
-          <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-start space-x-5">
+          <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
           <div class="flex-1">
-            <div class="bg-gray-50 rounded-lg px-4 py-3 border border-gray-200">
-              <p class="text-sm text-gray-600 font-medium mb-1">System</p>
-              <div class="text-gray-700"><%= simple_format message["content"] %></div>
+            <div class="bg-gray-50 rounded-xl px-6 py-5 border border-gray-200">
+              <p class="text-base text-gray-600 font-medium mb-2">System</p>
+              <div class="text-gray-700 text-lg leading-relaxed"><%= simple_format message["content"] %></div>
             </div>
           </div>
         </div>
 
       <% when "user" %>
         <!-- User Message -->
-        <div class="flex items-start space-x-3 justify-end">
+        <div class="flex items-start space-x-5 justify-end">
           <div class="flex-1">
-            <div class="bg-user-bg rounded-lg px-4 py-3 border border-blue-200">
-              <p class="text-sm text-blue-700 font-medium mb-1">You</p>
-              <div class="text-gray-900"><%= simple_format message["content"] %></div>
+            <div class="bg-user-bg rounded-xl px-6 py-5 border border-blue-200">
+              <p class="text-base text-blue-700 font-medium mb-2">You</p>
+              <div class="text-gray-900 text-lg leading-relaxed"><%= simple_format message["content"] %></div>
             </div>
           </div>
-          <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-            <span class="text-white text-sm font-medium">U</span>
+          <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-base font-medium">U</span>
           </div>
         </div>
 
       <% when "assistant" %>
         <!-- Assistant Message -->
-        <div class="flex items-start space-x-3">
-          <div class="w-8 h-8 gradient-claude rounded-full flex items-center justify-center flex-shrink-0">
-            <span class="text-white text-sm font-bold">A</span>
+        <div class="flex items-start space-x-5">
+          <div class="w-12 h-12 gradient-claude rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-white text-base font-bold">A</span>
           </div>
           <div class="flex-1">
-            <div class="bg-assistant-bg rounded-lg px-4 py-3 border border-gray-200">
-              <p class="text-sm text-gray-600 font-medium mb-1">Assistant</p>
-              <div class="text-gray-900"><%= simple_format message["content"] %></div>
+            <div class="bg-assistant-bg rounded-xl px-6 py-5 border border-gray-200">
+              <p class="text-base text-gray-600 font-medium mb-2">Assistant</p>
+              <div class="text-gray-900 text-lg leading-relaxed"><%= simple_format message["content"] %></div>
             </div>
           </div>
         </div>
@@ -214,21 +214,21 @@
   </div>
 
   <!-- Input Area -->
-  <div class="bg-white border-t border-gray-200 px-6 py-4">
+  <div class="bg-white border-t border-gray-200 px-9 py-6">
     <% if @mcp_chat.pending_tool_confirmation? %>
       <!-- Disabled input during confirmation -->
-      <div class="flex space-x-4 opacity-50">
+      <div class="flex space-x-6 opacity-50">
         <div class="flex-1">
           <textarea
             placeholder="Waiting for tool confirmation..."
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none outline-none"
-            rows="3"
+            class="w-full px-6 py-5 border border-gray-300 rounded-xl resize-none outline-none text-lg"
+            rows="4"
             disabled
           ></textarea>
         </div>
-        <button class="px-6 py-3 bg-gray-400 text-white rounded-lg flex items-center space-x-2 self-end cursor-not-allowed" disabled>
-          <span class="font-medium">Send</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button class="px-9 py-5 bg-gray-400 text-white rounded-xl flex items-center space-x-3 self-end cursor-not-allowed" disabled>
+          <span class="font-medium text-base">Send</span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
           </svg>
         </button>
@@ -236,11 +236,11 @@
     <% else %>
       <!-- Active chat input -->
       <%= form_with url: '/mcp_chat/chat', method: :post, local: true, class: "relative", data: { controller: "shortcut", shortcut_target: "form" } do |form| %>
-        <%= form.text_area :prompt, rows: 3, placeholder: "Type your message...", class: "w-full px-4 py-3 pr-20 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-claude-blue focus:border-transparent outline-none", data: { shortcut_target: "textarea" } %>
+        <%= form.text_area :prompt, rows: 4, placeholder: "Type your message...", class: "w-full px-6 py-5 pr-32 border border-gray-300 rounded-xl resize-none focus:ring-2 focus:ring-claude-blue focus:border-transparent outline-none text-lg leading-relaxed", data: { shortcut_target: "textarea" } %>
 
-        <div class="w-full flex justify-between">
-          <p class="text-xs text-gray-500 mt-2">Chat ID: <%= @mcp_chat.mcp_chat_id %></p>
-          <%= form.submit "Send", class: "px-3 py-2 bg-claude-blue text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium" %>
+        <div class="w-full flex justify-between mt-3">
+          <p class="text-sm text-gray-500">Chat ID: <%= @mcp_chat.mcp_chat_id %></p>
+          <%= form.submit "Send", class: "px-6 py-3 bg-claude-blue text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium" %>
         </div>
       <% end %>
     <% end %>
