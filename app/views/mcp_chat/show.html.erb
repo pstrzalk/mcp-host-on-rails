@@ -240,7 +240,7 @@
 
         <div class="w-full flex justify-between mt-3">
           <p class="text-sm text-gray-500">Chat ID: <%= @mcp_chat.mcp_chat_id %></p>
-          <%= form.submit "Send", class: "px-6 py-3 bg-claude-blue text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium" %>
+          <%= form.submit "Send", class: "px-6 py-3 bg-claude-blue text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium", data: { shortcut_target: "submitButton" } %>
         </div>
       <% end %>
     <% end %>
