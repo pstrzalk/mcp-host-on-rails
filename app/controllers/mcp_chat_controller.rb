@@ -8,20 +8,12 @@ class McpChatController < ApplicationController
   end
 
   def new
-    # Always create a new session/chat when user explicitly visits /new
     session["mcp_chat_id"] = SecureRandom.uuid
     @mcp_chat_id = session["mcp_chat_id"]
-    # Clear any existing chat instance variable to force a fresh start
-    @mcp_chat = nil
   end
 
   def show
-    # Initialize session if it doesn't exist, but don't redirect unless user explicitly wants new chat
-    unless session["mcp_chat_id"]
-      session["mcp_chat_id"] = SecureRandom.uuid
-    end
-
-    mcp_chat # This will create the chat if it doesn't exist
+    mcp_chat or redirect_to "/mcp_chat/new"
   end
 
   def chat
