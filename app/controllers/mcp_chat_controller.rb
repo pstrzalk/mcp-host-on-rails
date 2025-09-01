@@ -4,7 +4,11 @@ class McpChatController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def toolbox
-    @tools ||= mcp_client&.list_tools || []
+    @tools ||= begin
+      mcp_client&.list_tools || []
+    rescue MCPClient::Errors::ConnectionError
+      []
+    end
   end
 
   def new
@@ -88,7 +92,7 @@ class McpChatController < ApplicationController
       chat_params[:tool_choice] = "auto"
     end
 
-    response = openai_client.chat(parameters: chat_params)
+    response = chat(parameters: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
     tool_call_definitions = assistant_message["tool_calls"] || []
@@ -164,7 +168,7 @@ class McpChatController < ApplicationController
       chat_params[:tool_choice] = "auto"
     end
 
-    response = openai_client.chat(parameters: chat_params)
+    response = chat(parameters: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
     tool_call_definitions = assistant_message["tool_calls"] || []
@@ -207,11 +211,24 @@ class McpChatController < ApplicationController
   end
 
   def tools
-    @tools ||= mcp_client&.to_openai_tools || []
+    @tools ||= toolbox
   end
 
   def openai_client
     @openai_client ||= OpenAI::Client.new # (access_token: ENV.fetch("OPENAI_API_KEY"))
+  end
+
+  def chat(chat_params)
+    openai_client.chat(parameters: chat_params)
+  rescue Faraday::ConnectionFailed => e
+    {
+      "choices" => [ {
+        "message" => {
+          "role" => "assistant",
+          "content" => "Communication error - #{e.message}"
+        }
+      } ]
+    }
   end
 
   def mcp_chat
