@@ -284,7 +284,7 @@ GEM
       rubocop (>= 1.72)
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
-    ruby-mcp-client (0.7.2)
+    ruby-mcp-client (0.7.3)
       faraday (~> 2.0)
       faraday-follow_redirects (~> 0.3)
       faraday-retry (~> 2.0)
