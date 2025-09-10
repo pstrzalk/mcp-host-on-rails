@@ -92,7 +92,7 @@ class McpChatController < ApplicationController
       chat_params[:tool_choice] = "auto"
     end
 
-    response = openai_chat(parameters: chat_params)
+    response = openai_chat(chat_params: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
     tool_call_definitions = assistant_message["tool_calls"] || []
@@ -164,11 +164,11 @@ class McpChatController < ApplicationController
 
     # Only include tools if we have any configured
     if tools.any?
-      chat_params[:tools] = tools
+      chat_params[:tools] = mcp_client.to_openai_tools
       chat_params[:tool_choice] = "auto"
     end
 
-    response = openai_chat(parameters: chat_params)
+    response = openai_chat(chat_params: chat_params)
 
     assistant_message = response.dig("choices", 0, "message")
     tool_call_definitions = assistant_message["tool_calls"] || []
@@ -197,12 +197,12 @@ class McpChatController < ApplicationController
       return nil if servers.empty?
 
       configs = servers.map do |server|
-        MCPClient.streamable_http_config(
+        MCPClient.http_config(
           base_url: server.url,
           read_timeout: 60,     # Timeout in seconds for HTTP requests
           retries: 3,           # Number of retry attempts on transient errors
           retry_backoff: 2,     # Base delay in seconds for exponential backoff
-          logger: logger        # Optional logger for debugging requests
+          logger: logger        # Optional logger for debugging requests,
         )
       end
 
@@ -218,7 +218,7 @@ class McpChatController < ApplicationController
     @openai_client ||= OpenAI::Client.new # (access_token: ENV.fetch("OPENAI_API_KEY"))
   end
 
-  def openai_chat(chat_params)
+  def openai_chat(chat_params: chat_params)
     openai_client.chat(parameters: chat_params)
   rescue Faraday::ConnectionFailed => e
     {
