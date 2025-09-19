@@ -1,24 +1,25 @@
 # MCP Host on Rails
 
-> **Warning**: This is a demonstration project created for educational purposes. Use at your own risk in production environments.
+A Rails 8 application implementing a Model Context Protocol (MCP) host with chat interface, tool confirmation mechanics, and persistent conversation management. This project demonstrates practical MCP integration using the `ruby-mcp-client` gem to create a conversational AI assistant with secure access to external tools.
 
-A Rails 8 application demonstrating Model Context Protocol (MCP) integration, created for the presentation "Making Rails AI-Native with the Model Context Protocol" at **EuRuKo 2025**.
+**Featured at EuRuKo 2025**: https://2025.euruko.org/
 
-This project showcases how to build an MCP Host implementation in Ruby on Rails using the [`ruby-mcp-client`](https://github.com/simonx1/ruby-mcp-client) gem, enabling seamless integration between AI language models and external tools through the standardized MCP protocol.
+This application showcases how to build an MCP Host implementation in Ruby on Rails, bridging the gap between Large Language Models and external tools through the standardized Model Context Protocol.
 
 ## What is MCP?
 
 The Model Context Protocol (MCP) is an open standard that enables AI applications to securely connect to external tools and data sources. This Rails application acts as an MCP Host, orchestrating conversations between users, AI models (OpenAI), and MCP-compatible tools.
 
-## Features
+## Key Features
 
-- **Interactive AI Chat Interface**: Clean, responsive chat UI built with Turbo and Stimulus
-- **MCP Tool Integration**: Dynamic tool discovery and execution from MCP servers
-- **Tool Call Confirmation Workflow**: All tool executions require explicit user approval for security
-- **Multi-Server Support**: Connect to multiple MCP servers simultaneously
-- **Session Management**: Persistent conversation state with secure session handling
-- **Real-time Updates**: Turbo-powered real-time UI updates without page refreshes
-- **Database-Backed Configuration**: Manage MCP server connections through web interface
+- **Interactive Chat Interface**: Clean, modern chat UI with message persistence
+- **Tool Confirmation Workflow**: Security-first approach requiring user approval for all tool executions
+- **Multi-Server Support**: Connect to multiple MCP servers simultaneously via web interface
+- **Session Management**: Session-based chat instances with UUIDs
+- **Database Persistence**: All conversations stored in SQLite with JSON message history
+- **Dynamic Tool Loading**: Tools are discovered and loaded dynamically from configured MCP servers
+- **Real-time Updates**: Turbo-powered UI updates without page refreshes
+- **Graceful Degradation**: Functions as standard AI assistant when no MCP servers are configured
 
 ## Architecture
 
@@ -53,109 +54,86 @@ The Model Context Protocol (MCP) is an open standard that enables AI application
 ### Prerequisites
 
 - Ruby 3.4.2
-- Rails 8.0.2
-- SQLite3
+- Rails 8
+- SQLite
 - OpenAI API key
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/mcp-host-on-rails.git
-   cd mcp-host-on-rails
-   ```
-
-2. **Install dependencies**
-   ```bash
-   bundle install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your OpenAI API key
-   echo "OPENAI_API_KEY=your_openai_api_key_here" >> .env
-   ```
-
-4. **Set up the database**
-   ```bash
-   bin/rails db:migrate
-   ```
-
-5. **Start the development server**
-   ```bash
-   bin/dev  # Starts both Rails server and Tailwind CSS watcher
-   ```
-
-The application will be available at `http://localhost:3030`
-
-## Development
-
-### Code Quality
-
+1. **Clone the repository**:
 ```bash
-# Run linter (RuboCop)
-bundle exec rubocop
-
-# Run security scanner
-bundle exec brakeman
+git clone <repository-url>
+cd mcp-host-on-rails
 ```
 
-### Database Operations
-
+2. **Install dependencies**:
 ```bash
-# Run migrations
+bundle install
+```
+
+3. **Set up the database**:
+```bash
 bin/rails db:migrate
 ```
 
-## Key Dependencies
-
-- **[rails](https://rubyonrails.org/)** (~> 8.0.2): Web application framework
-- **[ruby-openai](https://github.com/alexrudall/ruby-openai)**: OpenAI API integration
-- **[ruby-mcp-client](https://github.com/simonx1/ruby-mcp-client)**: MCP protocol client
-- **[tailwindcss-rails](https://github.com/rails/tailwindcss-rails)**: CSS styling framework
-- **[turbo-rails](https://turbo.hotwired.dev/)**: SPA-like page acceleration
-- **[stimulus-rails](https://stimulus.hotwired.dev/)**: Modest JavaScript framework
-
-## User Workflow
-
-1. **Start Conversation**: Navigate to root path to begin new chat session
-2. **View Available Tools**: Visit toolbox to see connected MCP tools
-3. **Chat with AI**: Send messages that may trigger tool usage
-4. **Tool Confirmation**: When AI wants to use tools, approve or decline each call
-5. **Tool Execution**: Approved tools execute via MCP servers
-6. **Response Integration**: Tool results are fed back to AI for final response
-
-## Security Features
-
-- **Tool Call Confirmation**: Every tool execution requires explicit user approval
-- **Session-based Isolation**: Each chat session is isolated with secure UUIDs
-- **Input Sanitization**: All user inputs are properly sanitized
-- **CSRF Protection**: Standard Rails CSRF protection enabled
-- **Secure Headers**: Security headers configured for production deployment
-
-## Project Structure
-
-```
-app/
-├── controllers/
-│   ├── mcp_chat_controller.rb      # Main chat orchestration
-│   └── mcp_servers_controller.rb   # Server configuration
-├── models/
-│   ├── mcp_chat.rb                 # Conversation management
-│   ├── mcp_server.rb              # Server configuration
-│   └── message.rb                  # Message storage
-└── views/
-    ├── mcp_chat/                   # Chat interface templates
-    └── mcp_servers/               # Server management UI
-
-config/routes.rb                    # Application routing
-db/migrate/                         # Database migrations
+4. **Configure environment variables**:
+```bash
+export OPENAI_API_KEY=your_openai_api_key_here
 ```
 
-## ruby-mcp-client Gem Integration
+5. **Start the development server**:
+```bash
+bin/dev
+```
 
-This application uses the **HTTP** transport configuration for MCP communication:
+The application will be available at `http://localhost:3030`
+
+## Usage
+
+### Starting a New Chat
+
+1. Visit the application homepage
+2. If no active chat exists, you'll be redirected to create a new chat session
+3. Enter your message and start conversing
+
+### Tool Confirmation Workflow
+
+When the AI assistant requests to use a tool:
+
+1. **Tool Request**: Chat pauses and displays tool confirmation dialog
+2. **Review Details**: Tool name, description, and parameters are shown
+3. **User Decision**: Click "Allow" to execute or "Deny" to decline
+4. **Execution**: If approved, tool runs and results are integrated into conversation
+5. **Continuation**: Chat resumes with tool results incorporated
+
+### MCP Server Configuration
+
+1. Navigate to `/mcp_servers` in the application
+2. Add MCP servers by providing:
+   - **Name**: Descriptive identifier for the server
+   - **URL**: HTTP/HTTPS endpoint (must support MCP HTTP transport)
+
+**Important**: All MCP servers must use HTTP/HTTPS transport. When no servers are configured, the application functions as a standard AI chat assistant without tool capabilities.
+
+### Available Endpoints
+
+- `/` - Main chat interface
+- `/mcp_chat/new` - Initialize new chat session
+- `/mcp_chat/toolbox` - View available MCP tools
+- `/mcp_servers` - Manage MCP server configurations
+
+### Message Flow
+
+1. **User Input** → Chat controller receives user message
+2. **LLM Processing** → OpenAI processes message with available tool descriptions
+3. **Tool Request** → If LLM requests tool use, user sees confirmation dialog
+4. **Tool Execution** → Upon approval, tool is called via MCP client
+5. **Response Integration** → Tool results are sent back to LLM for final response
+6. **Display** → Complete conversation with tool interactions shown to user
+
+### MCP Integration
+
+The application uses the `ruby-mcp-client` gem to communicate with MCP servers via HTTP transport:
 
 ```ruby
 @mcp_client ||= MCPClient.create_client(
@@ -170,30 +148,55 @@ This application uses the **HTTP** transport configuration for MCP communication
 )
 ```
 
-The gem provides multiple transport types (stdio, SSE, HTTP, Streamable HTTP) and seamless integration with AI services through built-in tool format converters.
+### Database Schema
+
+**mcp_chats table:**
+- `id` - Primary key
+- `mcp_chat_id` - Session identifier (UUID)
+- `messages` - JSON array of conversation messages
+- `tool_confirmation_state` - Current tool confirmation status
+- `timestamps` - Created/updated timestamps
+
+**mcp_servers table:**
+- `id` - Primary key
+- `name` - Server identifier (unique)
+- `url` - Server endpoint URL
+- `timestamps` - Created/updated timestamps
+
+### Message Format
+
+Messages are stored as JSON objects with OpenAI-compatible structure:
+
+```json
+{
+  "role": "user|assistant|tool|system",
+  "content": "Message content",
+  "tool_calls": [...],  // For assistant messages requesting tools
+  "function_name": "...", // For tool response messages
+  "function_arguments": {...}
+}
+```
 
 ## Contributing
 
-This is a demonstration project for EuRuKo 2025. While primarily educational, contributions are welcome:
+This project was created for demonstration purposes at EuRuKo 2025. While primarily educational, contributions are welcome for:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- Bug fixes and improvements
+- Additional MCP transport support
+- UI/UX enhancements
+- Documentation improvements
+- Test coverage expansion
 
-## License
+## Acknowledgments
 
-This project is open source and available under the [MIT License](LICENSE).
+- **EuRuKo 2025** - For providing the platform to showcase this project
+- **ruby-mcp-client** - By simonx1, enabling Ruby MCP Client
+- **Model Context Protocol** - Open standard for AI-tool integration
+- **Ruby on Rails Community** - For the excellent framework and ecosystem
 
-## About EuRuKo 2025
+## Related Resources
 
-This application was created as a demonstration for the presentation "Making Rails AI-Native with the Model Context Protocol" at EuRuKo 2025. The project showcases practical implementation patterns for integrating MCP into Ruby on Rails applications, making them AI-native while maintaining security and user control.
-
-## Disclaimer
-
-This is a toy/pet project created for educational and demonstration purposes. While it implements security best practices, it has not undergone extensive production testing. Use at your own risk in production environments.
-
----
-
-For questions or feedback about this implementation, feel free to open an issue or reach out during EuRuKo 2025!
+- [Model Context Protocol Documentation](https://modelcontextprotocol.io/)
+- [ruby-mcp-client GitHub Repository](https://github.com/simonx1/ruby-mcp-client)
+- [EuRuKo 2025 Conference](https://2025.euruko.org/)
+- [OpenAI API Documentation](https://platform.openai.com/docs/api-reference)
